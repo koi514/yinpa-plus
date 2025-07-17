@@ -206,10 +206,10 @@ async def pk(bot, event: CQEvent) -> None:
             ("肖雪", "肖雪"): {
                 "action": f"【{attacker_name}】与【{defender_name}】磨起了豆腐",
                 "win": [
-                    f"把对方扣到在地，【{defender_name}】在地上抽搐，感觉被玩坏了",
+                    f"把对方扣倒在地，【{defender_name}】在地上抽搐，感觉被玩坏了",
                 ],
                 "lose": [
-                    f"却被对方扣到在地，不堪其辱，",
+                    f"却被对方扣倒在地，不堪其辱",
                 ]
             }
         }
