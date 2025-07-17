@@ -1670,6 +1670,7 @@ async def query_status(bot, event: CQEvent) -> None:
         # 获取用户数据
         user_data = group_userdata[target_id]
         user_name = await utils.get_user_card(bot, int(gid), int(target_id))
+        user_type = user_data["type"]
 
         # 根据涩涩值判断状态
         silver = user_data.get("silver", 0)
@@ -1731,14 +1732,21 @@ async def query_status(bot, event: CQEvent) -> None:
             if slaves:
                 identity_status = f"{'、'.join(slaves)}的主人"
 
+        # 处理注入值显示
+        ejaculation = user_data.get("ejaculation", 0)
+        if user_type == "吉吉":
+            ejaculation_display = f"当前射出值: {abs(ejaculation)}ml"
+        else:
+            ejaculation_display = f"当前注入量: {ejaculation}ml"
+
         # 构造状态信息文本
         status_text = (
             f"状态: {status}\n"
             f"群友: {user_name}\n"
-            f"类型: {user_data['type']}\n"
-            f"涩涩值: {user_data['silver']}\n"
-            f"{user_data['type']}开发度: {user_data['development']}\n"
-            f"当前注入量: {user_data.get('ejaculation', 0)}ml\n"
+            f"类型: {user_type}\n"
+            f"涩涩值: {silver}\n"
+            f"{user_type}开发度: {user_data['development']}\n"
+            f"{ejaculation_display}\n"
             f"当前使用道具: {current_item}\n"
             f"地牢状态: {dungeon_status}\n"
             f"身份: {identity_status}\n"
