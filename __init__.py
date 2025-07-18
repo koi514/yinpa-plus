@@ -613,6 +613,12 @@ async def suo(bot, event: CQEvent) -> None:
                 "你戴着口球，无法嗦哦",
                 at_sender=True
             )
+        if group_userdata.get(target_id, {}).get("play") == "飞机杯":
+            await bot.finish(
+                event,
+                "对方正在使用飞机杯，腾不出手了",
+                at_sender=True
+            )
 
         # 更新CD时间（只有通过所有检查后才更新）
         utils.suo_cd_data.update({uid: time.time()})
