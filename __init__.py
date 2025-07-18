@@ -665,9 +665,9 @@ async def suo(bot, event: CQEvent) -> None:
         return
 
 
-@sv.on_prefix("使用")
+@sv.on_prefix("使用玩具")
 async def use_item(bot, event: CQEvent) -> None:
-    """使用道具的响应器"""
+    """使用玩具的响应器"""
     try:
         gid = str(event.group_id)
         uid = str(event.user_id)
@@ -816,9 +816,9 @@ async def use_item(bot, event: CQEvent) -> None:
         return
 
 
-@sv.on_prefix("取下")
+@sv.on_prefix("取下玩具")
 async def remove_item(bot, event: CQEvent) -> None:
-    """取下道具的响应器"""
+    """取下玩具的响应器"""
     gid = str(event.group_id)
     uid = str(event.user_id)
 
@@ -1188,15 +1188,20 @@ async def play_hard(bot, event: CQEvent) -> None:
         if user_type == "肖雪":
             # 处理肖雪用户
             ejaculation = user_data.get("ejaculation", 0)
-            if ejaculation > 0:
-                ejaculation_loss = random.randint(1, 10)
+            if ejaculation > 10:  # 只有注入值大于10才会扣除
+                ejaculation_loss = random.randint(1, 8)
                 user_data["ejaculation"] = max(0, ejaculation - ejaculation_loss)
                 msg = (
                     f"【{user_name}】全身发热，扣个不停，直到爽晕过去为止\n"
                     f"肖雪里缓缓流出储存的{ejaculation_loss}ml脱氧核糖核酸\n"
                     f"涩涩值+{silver_gain}，肖雪开发度+{development_gain}"
                 )
-            else:
+            elif ejaculation > 0:
+                msg = (
+                    f"【{user_name}】全身发热，扣个不停，直到爽晕过去为止\n"
+                    f"涩涩值+{silver_gain}，肖雪开发度+{development_gain}"
+                )
+            else:  # 注入值为0
                 msg = (
                     f"【{user_name}】全身发热，扣个不停，直到爽晕过去为止\n"
                     f"涩涩值+{silver_gain}，肖雪开发度+{development_gain}"
@@ -1225,7 +1230,6 @@ async def play_hard(bot, event: CQEvent) -> None:
     except Exception as e:
         sv.logger.error(f"使劲玩弄时出错: {type(e).__name__}: {e}")
         return
-
 
 @sv.on_prefix(("黑暗游戏"))
 async def dark_game(bot, event: CQEvent):
