@@ -1421,7 +1421,7 @@ async def put_in_dungeon(bot, event: CQEvent):
         if target_id == uid:
             # 更新地牢状态
             group_userdata[uid]["dungeon"] = "被关"
-            dungeon_data[uid] = utils.get_dungeon_release_time().isoformat()  # 修改为使用utils实例调用
+            dungeon_data[uid] = utils.get_dungeon_release_time().isoformat()
 
             # 记录使用
             daily_dungeon[today][uid] = True
@@ -1441,18 +1441,13 @@ async def put_in_dungeon(bot, event: CQEvent):
         if utils.check_dungeon_time(target_id, dungeon_data):
             await bot.finish(event, f"{target_name}已经被关在地牢里了喵", at_sender=True)
 
-        # 计算成功率（基于双方涩涩值）
-        attacker_silver = group_userdata[uid]["silver"]
-        defender_silver = group_userdata[target_id]["silver"]
-        success_rate = attacker_silver / (attacker_silver + defender_silver) if (attacker_silver + defender_silver) > 0 else 0.5
-
-        # 随机决定是否成功
-        is_success = random.random() < success_rate
+        # 固定60%成功率
+        is_success = random.random() < 0.6
 
         if is_success:
             # 成功关进地牢
             group_userdata[target_id]["dungeon"] = "被关"
-            dungeon_data[target_id] = utils.get_dungeon_release_time().isoformat()  # 修改为使用utils实例调用
+            dungeon_data[target_id] = utils.get_dungeon_release_time().isoformat()
 
             # 记录使用
             daily_dungeon[today][uid] = True
