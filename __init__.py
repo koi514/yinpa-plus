@@ -13,7 +13,7 @@ from typing import Tuple
 from .txt2img import txt_to_img
 from .utils import utils
 from .utils import Utils
-from datetime import datetime
+from datetime import datetime, timedelta
 
 sv = Service(
     name="impact",  # 功能名
@@ -1109,7 +1109,7 @@ async def generate_jj(bot, event: CQEvent):
             "play": None,
             "ejaculation": 0,
             "ejaculation_history": 0,
-            "dungeon": null,
+            "dungeon": None,
             "master": "无",
         }
 
@@ -1417,11 +1417,15 @@ async def put_in_dungeon(bot, event: CQEvent):
         if uid in daily_dungeon[today]:
             await bot.finish(event, "你今天已经使用过地牢了喵", at_sender=True)
 
+        # 随机生成关押时间(1-24小时)
+        dungeon_hours = random.randint(1, 24)
+        release_time = datetime.now() + timedelta(hours=dungeon_hours)
+
         # 如果是自己关自己，直接成功
         if target_id == uid:
             # 更新地牢状态
             group_userdata[uid]["dungeon"] = "被关"
-            dungeon_data[uid] = utils.get_dungeon_release_time().isoformat()
+            dungeon_data[uid] = release_time.isoformat()
 
             # 记录使用
             daily_dungeon[today][uid] = True
@@ -1434,20 +1438,20 @@ async def put_in_dungeon(bot, event: CQEvent):
             with open(daily_dungeon_file, "w", encoding="utf-8") as f:
                 json.dump(daily_dungeon, f, indent=4, ensure_ascii=False)
 
-            await bot.send(event, f"【{user_name}】把自己关进了地牢，3小时后自动释放")
+            await bot.send(event, f"【{user_name}】把自己关进了地牢，{dungeon_hours}小时后自动释放")
             return
 
         # 检查目标是否已经在地牢中
         if utils.check_dungeon_time(target_id, dungeon_data):
             await bot.finish(event, f"{target_name}已经被关在地牢里了喵", at_sender=True)
 
-        # 固定60%成功率
-        is_success = random.random() < 0.6
+        # 固定70%成功率
+        is_success = random.random() < 0.7
 
         if is_success:
             # 成功关进地牢
             group_userdata[target_id]["dungeon"] = "被关"
-            dungeon_data[target_id] = utils.get_dungeon_release_time().isoformat()
+            dungeon_data[target_id] = release_time.isoformat()
 
             # 记录使用
             daily_dungeon[today][uid] = True
@@ -1460,7 +1464,7 @@ async def put_in_dungeon(bot, event: CQEvent):
             with open(daily_dungeon_file, "w", encoding="utf-8") as f:
                 json.dump(daily_dungeon, f, indent=4, ensure_ascii=False)
 
-            await bot.send(event, f"【{user_name}】成功将【{target_name}】关进了地牢，3小时后自动释放")
+            await bot.send(event, f"【{user_name}】成功将【{target_name}】关进了地牢，{dungeon_hours}小时后自动释放")
         else:
             # 记录使用（即使失败也记录）
             daily_dungeon[today][uid] = True
@@ -1685,8 +1689,10 @@ async def query_status(bot, event: CQEvent) -> None:
             status = "纯洁"
         elif 100 < silver <= 500:
             status = "涩情"
+        elif 500< silver <=1000:
+            status = "淫荡"
         else:
-            status = "应当"
+            status = "魅魔"
 
         # 获取当前使用的道具
         current_item = user_data.get("play", "无")
