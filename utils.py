@@ -46,9 +46,10 @@ class Utils:
 
         self.not_allow = "群内还未开启银趴游戏, 请管理员或群主发送\"开启银趴\", \"禁止银趴\"以开启/关闭该功能"
 
-    def get_dungeon_release_time(self, hours=3):
-        """获取地牢释放时间（当前时间+指定小时）"""
-        return datetime.now() + timedelta(hours=hours)
+    def get_dungeon_release_time(self, min_hours=1, max_hours=24):
+        """获取随机地牢释放时间（当前时间+随机小时数）"""
+        dungeon_hours = random.randint(min_hours, max_hours)
+        return datetime.now() + timedelta(hours=dungeon_hours)
 
     def get_master_release_time(self, hours=24):
         """获取主人关系解除时间（当前时间+指定小时）"""
@@ -138,7 +139,7 @@ class Utils:
 指令10: 开启银趴/关闭银趴 (管理员指令,开关功能)
 指令11: 使用玩具/取下玩具 道具名 @目标(使用或取出小道具)
 指令12: 黑暗游戏 @目标 (进行黑暗游戏，3天CD，越涩越容易赢)
-指令13: 关地牢里 @目标 (将目标关入地牢3小时，60%概率)
+指令13: 关地牢里 @目标 (将目标关入地牢1-12小时，60%概率)
 指令14: 逃脱地牢 (尝试逃脱地牢，每天限一次)
 指令15: 放生 @目标 (放生星怒)"""
 

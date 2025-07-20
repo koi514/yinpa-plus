@@ -1418,7 +1418,7 @@ async def put_in_dungeon(bot, event: CQEvent):
             await bot.finish(event, "你今天已经使用过地牢了喵", at_sender=True)
 
         # 随机生成关押时间(1-24小时)
-        dungeon_hours = random.randint(1, 24)
+        dungeon_hours = random.randint(1, 12)
         release_time = datetime.now() + timedelta(hours=dungeon_hours)
 
         # 如果是自己关自己，直接成功
@@ -1446,7 +1446,7 @@ async def put_in_dungeon(bot, event: CQEvent):
             await bot.finish(event, f"{target_name}已经被关在地牢里了喵", at_sender=True)
 
         # 固定70%成功率
-        is_success = random.random() < 0.7
+        is_success = random.random() < 0.6
 
         if is_success:
             # 成功关进地牢
